@@ -32,23 +32,23 @@ public class PlayerController : MonoBehaviour {
         rigidbody = GetComponent<Rigidbody>();
     }
 
-	void FixedUpdate () {
-        if (Input.GetAxisRaw("Vertical") > 0) {
+    void FixedUpdate() {
+        if (Input.GetAxis("Vertical") > 0) {
             currentSpeed += acceleration * Time.deltaTime;
         }
-        else if (Input.GetAxisRaw("Vertical") < 0) {
+        else if (Input.GetAxis("Vertical") < 0) {
             currentSpeed -= breakSpeed * Time.deltaTime;
         }
         else {
             currentSpeed -= deceleration * Time.deltaTime;
         }
 
-        //Debug.Log(Input.GetAxisRaw("Vertical") + " " + Input.GetAxisRaw("Horizontal"));
+        Debug.Log(Input.GetAxis("Vertical") + " " + Input.GetAxis("Horizontal"));
 
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
 
-        float turnAngle = maxTurnAmount * Input.GetAxisRaw("Horizontal");
-        currentTurnAngle += maxTurnAmount * Input.GetAxisRaw("Horizontal") * Time.deltaTime;
+        float turnAngle = maxTurnAmount * Input.GetAxis("Horizontal");
+        currentTurnAngle += maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
 
         RaycastHit raycastInfo;
         if (Physics.Raycast(transform.position, -transform.up, out raycastInfo, radius, trackMask)) {
@@ -69,5 +69,5 @@ public class PlayerController : MonoBehaviour {
         }
 
         rigidbody.velocity = transform.forward * currentSpeed - transform.up * currentFallSpeed;
-	}
+    }
 }
