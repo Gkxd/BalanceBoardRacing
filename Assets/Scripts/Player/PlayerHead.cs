@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerCamera : MonoBehaviour {
+public class PlayerHead : MonoBehaviour {
 
     public GameObject playerBody;
 

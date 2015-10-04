@@ -26,10 +26,15 @@ public class PlayerController : MonoBehaviour {
     private float currentSpeed;
     private float currentFallSpeed;
 
+    private Vector3 previousSurfaceNormal;
+    private Vector3 previousForwardOrientation;
+
     private new Rigidbody rigidbody;
 
     void Start() {
         rigidbody = GetComponent<Rigidbody>();
+        previousSurfaceNormal = Vector3.up;
+        previousForwardOrientation = Vector3.forward;
     }
 
     void FixedUpdate() {
@@ -43,12 +48,12 @@ public class PlayerController : MonoBehaviour {
             currentSpeed -= deceleration * Time.deltaTime;
         }
 
-        Debug.Log(Input.GetAxis("Vertical") + " " + Input.GetAxis("Horizontal"));
+        //Debug.Log(Input.GetAxis("Vertical") + " " + Input.GetAxis("Horizontal"));
 
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
 
-        float turnAngle = maxTurnAmount * Input.GetAxis("Horizontal");
-        currentTurnAngle += maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
+        float turnAngle = maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
+        currentTurnAngle += turnAngle;
 
         RaycastHit raycastInfo;
         if (Physics.Raycast(transform.position, -transform.up, out raycastInfo, radius, trackMask)) {
@@ -57,10 +62,13 @@ public class PlayerController : MonoBehaviour {
             if (raycastInfo.distance < radius) {
                 rigidbody.position = raycastInfo.point + raycastInfo.normal.normalized * radius;
             }
+            
+            Vector3 forwardOrientation = Quaternion.FromToRotation(previousSurfaceNormal, surfaceNormal) * previousForwardOrientation;
+            Vector3 forward = Quaternion.AngleAxis(currentTurnAngle, surfaceNormal) * forwardOrientation;
+            rigidbody.rotation = Quaternion.LookRotation(forward, surfaceNormal);
 
-            transform.up = surfaceNormal;
-            Vector3 facing = Quaternion.AngleAxis(currentTurnAngle, transform.up) * transform.forward;
-            transform.LookAt(transform.position + facing, transform.up);
+            previousSurfaceNormal = surfaceNormal;
+            previousForwardOrientation = forwardOrientation;
 
             currentFallSpeed = 0;
         }
