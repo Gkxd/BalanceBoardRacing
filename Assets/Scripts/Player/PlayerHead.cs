@@ -10,6 +10,12 @@ public class PlayerHead : MonoBehaviour {
     private Camera cam;
     private float FOV;
 
+    void Start ()
+    {
+        cam = Camera.main;
+        FOV = cam.fieldOfView;
+    }
+
     void Update()
     {
         transform.position = Vector3.Lerp(transform.position, controller.gameObject.transform.position, 0.05f);
