@@ -3,10 +3,26 @@ using System.Collections;
 
 public class PlayerHead : MonoBehaviour {
 
-    public GameObject playerBody;
+    public PlayerController controller;
 
-	void Update () {
-        transform.position = Vector3.Lerp(transform.position, playerBody.transform.position, 0.05f);
-        transform.rotation = Quaternion.Lerp(transform.rotation, playerBody.transform.rotation, 0.02f);
-	}
+    [SerializeField]
+    private bool boostFOV = true; //should FOV change when you boost?
+    private Camera cam;
+    private float FOV;
+
+    void Update()
+    {
+        transform.position = Vector3.Lerp(transform.position, controller.gameObject.transform.position, 0.05f);
+        transform.rotation = Quaternion.Lerp(transform.rotation, controller.gameObject.transform.rotation, 0.02f);
+
+        if (boostFOV)
+        {
+            if (controller.currentSpeed > controller.maxSpeed * 1.1f)
+            {
+                cam.fieldOfView = FOV + 2 * (controller.currentSpeed - controller.maxSpeed * 1.1f);
+            }
+            else cam.fieldOfView = FOV;
+        }
+
+    }
 }
