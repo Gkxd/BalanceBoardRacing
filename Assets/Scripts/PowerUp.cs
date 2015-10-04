@@ -6,10 +6,11 @@ public class PowerUp : MonoBehaviour {
     public enum Mode {
         BoostPad,
         Charge,
+        JumpPad,
     }
 
     public Mode mode;
-    public float value;
+    [Range(0f, 100f)] public float value;
     public bool respawn = true;
     public float respawnTimer = 100;
 
@@ -48,6 +49,10 @@ public class PowerUp : MonoBehaviour {
                     controller.padBoost += value;
                     controller.boosting = true; 
                     break;
+
+                case Mode.JumpPad:
+                    controller.rigidbody.AddForce(transform.up * Mathf.Sqrt(value) * 2000f);
+                    break; 
             }
         }
     }
