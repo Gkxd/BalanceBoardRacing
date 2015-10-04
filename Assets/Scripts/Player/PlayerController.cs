@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
+    [Header("Reference Settings")]
+    public new Rigidbody rigidbody;
 
     [Header("Body Settings")]
     public float radius;
@@ -29,10 +31,7 @@ public class PlayerController : MonoBehaviour {
     private Vector3 previousSurfaceNormal;
     private Vector3 previousForwardOrientation;
 
-    private new Rigidbody rigidbody;
-
     void Start() {
-        rigidbody = GetComponent<Rigidbody>();
         previousSurfaceNormal = Vector3.up;
         previousForwardOrientation = Vector3.forward;
     }
