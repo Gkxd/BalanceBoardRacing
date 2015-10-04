@@ -9,6 +9,7 @@ public class PlayerHead : MonoBehaviour {
     private bool boostFOV = true; //should FOV change when you boost?
     private Camera cam;
     private float FOV;
+    public bool freeCam;
 
     void Start ()
     {
@@ -19,7 +20,13 @@ public class PlayerHead : MonoBehaviour {
     void Update()
     {
         transform.position = Vector3.Lerp(transform.position, controller.gameObject.transform.position, 0.05f);
-        transform.rotation = Quaternion.Lerp(transform.rotation, controller.gameObject.transform.rotation, 0.02f);
+
+        if (freeCam)
+        {
+            transform.Rotate(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0f);
+        }
+        else transform.rotation = Quaternion.Lerp(transform.rotation, controller.gameObject.transform.rotation, 0.02f);
+
 
         if (boostFOV)
         {
