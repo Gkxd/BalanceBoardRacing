@@ -97,25 +97,29 @@ public class PlayerController : MonoBehaviour {
         currentTurnAngle += turnAngle;
 
         RaycastHit raycastInfo;
+        Vector3 surfaceNormal;
         if (Physics.Raycast(transform.position, -transform.up, out raycastInfo, radius, trackMask)) {
-            Vector3 surfaceNormal = raycastInfo.normal;
+            surfaceNormal = raycastInfo.normal;
 
-            if (raycastInfo.distance < radius) {
+            if (raycastInfo.distance < radius)
+            { //stop from going through the floor
                 rigidbody.position = raycastInfo.point + raycastInfo.normal.normalized * radius;
             }
-            
-            Vector3 forwardOrientation = Quaternion.FromToRotation(previousSurfaceNormal, surfaceNormal) * previousForwardOrientation;
-            Vector3 forward = Quaternion.AngleAxis(currentTurnAngle, surfaceNormal) * forwardOrientation;
-            rigidbody.rotation = Quaternion.LookRotation(forward, surfaceNormal);
-
-            previousSurfaceNormal = surfaceNormal;
-            previousForwardOrientation = forwardOrientation;
 
             currentFallSpeed = 0;
         }
         else {
+            surfaceNormal = previousSurfaceNormal;
+
             currentFallSpeed = Mathf.Min(currentFallSpeed + gravity * Time.deltaTime, maxFallSpeed);
         }
+
+        Vector3 forwardOrientation = Quaternion.FromToRotation(previousSurfaceNormal, surfaceNormal) * previousForwardOrientation;
+        Vector3 forward = Quaternion.AngleAxis(currentTurnAngle, surfaceNormal) * forwardOrientation;
+        rigidbody.rotation = Quaternion.LookRotation(forward, surfaceNormal);
+
+        previousSurfaceNormal = surfaceNormal;
+        previousForwardOrientation = forwardOrientation;
 
         rigidbody.velocity = transform.forward * currentSpeed - transform.up * currentFallSpeed;
     }
