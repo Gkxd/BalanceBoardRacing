@@ -12,6 +12,7 @@ ModelImporter:
     100008: BezierCurve.001
     100010: Icosphere
     100012: SpherePlanet_Right
+    100014: SpherePlanet_Visual
     400000: //RootNode
     400002: SpherePlanet_Track
     400004: SpherePlanet_Wall
@@ -19,6 +20,7 @@ ModelImporter:
     400008: BezierCurve.001
     400010: Icosphere
     400012: SpherePlanet_Right
+    400014: SpherePlanet_Visual
     2300000: SpherePlanet_Track
     2300002: SpherePlanet_Wall
     2300004: //RootNode
@@ -26,6 +28,7 @@ ModelImporter:
     2300008: BezierCurve.001
     2300010: Icosphere
     2300012: SpherePlanet_Right
+    2300014: SpherePlanet_Visual
     3300000: SpherePlanet_Track
     3300002: SpherePlanet_Wall
     3300004: //RootNode
@@ -33,12 +36,14 @@ ModelImporter:
     3300008: BezierCurve.001
     3300010: Icosphere
     3300012: SpherePlanet_Right
+    3300014: SpherePlanet_Visual
     4300000: SpherePlanet_Wall
     4300002: SpherePlanet_Track
     4300004: SpherePlanet_Right
     4300006: Icosphere
     4300008: BezierCurve
     4300010: BezierCurve.001
+    4300012: SpherePlanet_Visual
   materials:
     importMaterials: 0
     materialName: 0

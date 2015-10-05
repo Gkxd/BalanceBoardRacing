@@ -32,8 +32,8 @@ public class PlayerController : MonoBehaviour {
     private Vector3 previousForwardOrientation;
 
     void Start() {
-        previousSurfaceNormal = Vector3.up;
-        previousForwardOrientation = Vector3.forward;
+        previousSurfaceNormal = transform.up;
+        previousForwardOrientation = transform.forward;
     }
 
     void FixedUpdate() {
