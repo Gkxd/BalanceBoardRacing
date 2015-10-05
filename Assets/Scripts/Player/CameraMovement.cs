@@ -5,7 +5,8 @@ public class CameraMovement : MonoBehaviour {
     
     [Header("Gameplay Settings")]
     public bool useMouse;
-    public float mouseSensitivity;
+    public float mouseSensitivityX;
+    public float mouseSensitivityY;
 
     private float yaw, pitch;
 
@@ -16,8 +17,8 @@ public class CameraMovement : MonoBehaviour {
 
     void Update() {
         if (useMouse) {
-            yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+            yaw += Input.GetAxis("Mouse X") * mouseSensitivityX * Time.deltaTime;
+            pitch -= Input.GetAxis("Mouse Y") * mouseSensitivityY * Time.deltaTime;
 
             pitch = Mathf.Clamp(pitch, -60, 60);
         }

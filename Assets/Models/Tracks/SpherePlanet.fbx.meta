@@ -13,6 +13,13 @@ ModelImporter:
     100010: Icosphere
     100012: SpherePlanet_Right
     100014: SpherePlanet_Visual
+    100016: SpherePlanet_Visual_Base
+    100018: SpherePlanet_Visual_TrackBoundary
+    100020: SpherePlanet_TrackEdgeA
+    100022: SpherePlanet_TrackEdgeB
+    100024: SpherePlanet_Visual_TrackEdge
+    100026: SpherePlanet_Visual_TrackEdgeA
+    100028: SpherePlanet_Visual_TrackEdgeB
     400000: //RootNode
     400002: SpherePlanet_Track
     400004: SpherePlanet_Wall
@@ -21,6 +28,13 @@ ModelImporter:
     400010: Icosphere
     400012: SpherePlanet_Right
     400014: SpherePlanet_Visual
+    400016: SpherePlanet_Visual_Base
+    400018: SpherePlanet_Visual_TrackBoundary
+    400020: SpherePlanet_TrackEdgeA
+    400022: SpherePlanet_TrackEdgeB
+    400024: SpherePlanet_Visual_TrackEdge
+    400026: SpherePlanet_Visual_TrackEdgeA
+    400028: SpherePlanet_Visual_TrackEdgeB
     2300000: SpherePlanet_Track
     2300002: SpherePlanet_Wall
     2300004: //RootNode
@@ -29,6 +43,13 @@ ModelImporter:
     2300010: Icosphere
     2300012: SpherePlanet_Right
     2300014: SpherePlanet_Visual
+    2300016: SpherePlanet_Visual_Base
+    2300018: SpherePlanet_Visual_TrackBoundary
+    2300020: SpherePlanet_TrackEdgeA
+    2300022: SpherePlanet_TrackEdgeB
+    2300024: SpherePlanet_Visual_TrackEdge
+    2300026: SpherePlanet_Visual_TrackEdgeA
+    2300028: SpherePlanet_Visual_TrackEdgeB
     3300000: SpherePlanet_Track
     3300002: SpherePlanet_Wall
     3300004: //RootNode
@@ -37,6 +58,13 @@ ModelImporter:
     3300010: Icosphere
     3300012: SpherePlanet_Right
     3300014: SpherePlanet_Visual
+    3300016: SpherePlanet_Visual_Base
+    3300018: SpherePlanet_Visual_TrackBoundary
+    3300020: SpherePlanet_TrackEdgeA
+    3300022: SpherePlanet_TrackEdgeB
+    3300024: SpherePlanet_Visual_TrackEdge
+    3300026: SpherePlanet_Visual_TrackEdgeA
+    3300028: SpherePlanet_Visual_TrackEdgeB
     4300000: SpherePlanet_Wall
     4300002: SpherePlanet_Track
     4300004: SpherePlanet_Right
@@ -44,6 +72,13 @@ ModelImporter:
     4300008: BezierCurve
     4300010: BezierCurve.001
     4300012: SpherePlanet_Visual
+    4300014: SpherePlanet_Visual_TrackBoundary
+    4300016: SpherePlanet_Visual_Base
+    4300018: SpherePlanet_TrackEdgeB
+    4300020: SpherePlanet_TrackEdgeA
+    4300022: SpherePlanet_Visual_TrackEdgeB
+    4300024: SpherePlanet_Visual_TrackEdge
+    4300026: SpherePlanet_Visual_TrackEdgeA
   materials:
     importMaterials: 0
     materialName: 0
