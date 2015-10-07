@@ -4,7 +4,7 @@ using System.Collections;
 
 public class UIText : MonoBehaviour {
 
-    public PlayerController player;
+    public PlayerMovement player;
     public string variable;
 
     private string initialText;

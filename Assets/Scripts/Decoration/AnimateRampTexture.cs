@@ -4,7 +4,7 @@ using System.Collections;
 public class AnimateRampTexture : MonoBehaviour {
 
     [Header("Reference Settings")]
-    public MeshRenderer renderer;
+    public new MeshRenderer renderer;
 
     [Header("Gameplay Settings")]
     public float stepSize;

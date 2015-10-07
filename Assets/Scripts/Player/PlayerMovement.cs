@@ -2,20 +2,23 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerMovement : MonoBehaviour {
     [Header("Reference Settings")]
     public new Rigidbody rigidbody;
+    public PlayerMotionBlur motionBlur;
+    public PlayerHead head;
 
     [Header("Body Settings")]
     public float radius;
 
     [Header("Speed Settings")]
-    public float maxSpeed;
-    public float boostSpeed = 10f;
+    public float maxAccelerationSpeed;
+    public float additionalBoostSpeed;
 
     public float acceleration;
     public float deceleration;
     public float breakSpeed;
+    public float boostDecay;
 
     public float maxTurnAmount;
 
@@ -27,18 +30,13 @@ public class PlayerController : MonoBehaviour {
 
     private float currentTurnAngle;
     private float currentFallSpeed;
-    [HideInInspector]
-    public float currentSpeed;
 
     private Vector3 previousSurfaceNormal;
     private Vector3 previousForwardOrientation;
 
-    [HideInInspector]
-    public float boost = 0;
-    [HideInInspector]
-    public float padBoost = 0; //hidden boost value for when going over boost pads
-    [HideInInspector]
-    public bool boosting = false;
+    private float currentSpeed;
+    private float boostSpeed;
+    public float boost { get; set; } // The accumulated boost from pickups
 
     void Start() {
         previousSurfaceNormal = transform.up;
@@ -56,42 +54,15 @@ public class PlayerController : MonoBehaviour {
             currentSpeed -= deceleration * Time.deltaTime;
         }
 
+        currentSpeed = Mathf.Clamp(currentSpeed, 0, maxAccelerationSpeed);
+        currentSpeed += boostSpeed;
+
+        boostSpeed = Mathf.Lerp(boostSpeed, 0, boostDecay * Time.deltaTime);
+        if (boostSpeed < 0.01f) {
+            motionBlur.setBlurGradually(0.3f);
+        }
+
         //Debug.Log(Input.GetAxis("Vertical") + " " + Input.GetAxis("Horizontal"));
-
-
-        if (boosting)
-        {
-            currentSpeed += acceleration * boostSpeed / maxSpeed * Time.deltaTime;
-            currentSpeed = Mathf.Clamp(currentSpeed, 0, boostSpeed);
-
-            if (padBoost > 0) //pad boosting
-            {
-                padBoost -= 0.5f;
-                if (padBoost <= 0)
-                {
-                    padBoost = 0;
-                    boosting = false;
-                }
-            }
-            else if (boost > 0) //charge boosting
-            {
-                boost -= 0.5f;
-                if (boost <= 0)
-                {
-                    boost = 0;
-                    boosting = false;
-                }
-            }
-        }
-        else
-        {
-            currentSpeed = Mathf.Clamp(currentSpeed, 0, boostSpeed); //min speed = 0
-
-            if (currentSpeed > maxSpeed)
-            {
-                currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed, currentSpeed * Time.deltaTime); //return to max speed after boosting
-            }
-        }
 
         float turnAngle = maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
         currentTurnAngle += turnAngle;
@@ -101,8 +72,7 @@ public class PlayerController : MonoBehaviour {
         if (Physics.Raycast(transform.position, -transform.up, out raycastInfo, radius, trackMask)) {
             surfaceNormal = raycastInfo.normal;
 
-            if (raycastInfo.distance < radius)
-            { //stop from going through the floor
+            if (raycastInfo.distance < radius) { // Stop from going through the floor
                 rigidbody.position = raycastInfo.point + raycastInfo.normal.normalized * radius;
             }
 
@@ -124,14 +94,31 @@ public class PlayerController : MonoBehaviour {
         rigidbody.velocity = transform.forward * currentSpeed - transform.up * currentFallSpeed;
     }
 
-    void Update()
-    {
-        if (Input.GetAxis("Jump") > 0f)
-        { //When player jumps on board
-            if (boost > 0)
-            {
-                boosting = true;
+    void Update() {
+        if (Input.GetAxis("Jump") > 0) { // When player jumps on board
+            if (boost > 0) {
+                setBoost(boost);
+                boost = 0;
             }
+        }
+        if (Input.GetKeyDown(KeyCode.B)) {
+            if (boost < 1) {
+                Debug.Log("Adding 0.1 boost.");
+                boost += 0.1f;
+            }
+        }
+    }
+
+    public void setBoost(float f) {
+        float speedIncrease = additionalBoostSpeed * f;
+
+        currentSpeed += speedIncrease;
+
+        if (currentSpeed > maxAccelerationSpeed) {
+            boostSpeed = currentSpeed - maxAccelerationSpeed;
+            currentSpeed = maxAccelerationSpeed;
+
+            motionBlur.setBlurSuddenly(0.7f);
         }
     }
 }
