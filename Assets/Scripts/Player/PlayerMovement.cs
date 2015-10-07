@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -27,6 +28,12 @@ public class PlayerMovement : MonoBehaviour {
 
     [Header("Collider Settings")]
     public LayerMask trackMask;
+
+    [Header("Player UI")]
+    public GameObject wrongDirection;
+
+    private RaycastHit wallHit;
+    private int wallMask = 1 << 11; // Ray will only check right wall mesh
 
     private float currentTurnAngle;
     private float currentFallSpeed;
@@ -92,6 +99,25 @@ public class PlayerMovement : MonoBehaviour {
         previousForwardOrientation = forwardOrientation;
 
         rigidbody.velocity = transform.forward * currentSpeed - transform.up * currentFallSpeed;
+
+        //Casts Ray to right of player and checks if "right" mesh is hit to determine correct direction
+        if (Physics.Raycast(rigidbody.position, transform.right * 500, out wallHit, 5000, wallMask))
+        {
+            if (wallHit.collider.gameObject.name != "Right")
+            {
+                wrongDirection.SetActive(true); //Activate WrongWay X
+                Debug.Log("Not Right");
+            }
+            else
+            {
+                wrongDirection.SetActive(false); //Deactivate WrongWay X
+                Debug.Log("Right");
+            }
+        }
+
+        //Debugging to check directionality
+        Debug.DrawRay(rigidbody.position, transform.right * 500, Color.red);
+
     }
 
     void Update() {
