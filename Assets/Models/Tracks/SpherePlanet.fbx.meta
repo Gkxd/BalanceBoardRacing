@@ -20,6 +20,7 @@ ModelImporter:
     100024: SpherePlanet_Visual_TrackEdge
     100026: SpherePlanet_Visual_TrackEdgeA
     100028: SpherePlanet_Visual_TrackEdgeB
+    100030: SpherePlanet_Track_Arrows
     400000: //RootNode
     400002: SpherePlanet_Track
     400004: SpherePlanet_Wall
@@ -35,6 +36,7 @@ ModelImporter:
     400024: SpherePlanet_Visual_TrackEdge
     400026: SpherePlanet_Visual_TrackEdgeA
     400028: SpherePlanet_Visual_TrackEdgeB
+    400030: SpherePlanet_Track_Arrows
     2300000: SpherePlanet_Track
     2300002: SpherePlanet_Wall
     2300004: //RootNode
@@ -50,6 +52,7 @@ ModelImporter:
     2300024: SpherePlanet_Visual_TrackEdge
     2300026: SpherePlanet_Visual_TrackEdgeA
     2300028: SpherePlanet_Visual_TrackEdgeB
+    2300030: SpherePlanet_Track_Arrows
     3300000: SpherePlanet_Track
     3300002: SpherePlanet_Wall
     3300004: //RootNode
@@ -65,6 +68,7 @@ ModelImporter:
     3300024: SpherePlanet_Visual_TrackEdge
     3300026: SpherePlanet_Visual_TrackEdgeA
     3300028: SpherePlanet_Visual_TrackEdgeB
+    3300030: SpherePlanet_Track_Arrows
     4300000: SpherePlanet_Wall
     4300002: SpherePlanet_Track
     4300004: SpherePlanet_Right
@@ -79,6 +83,7 @@ ModelImporter:
     4300022: SpherePlanet_Visual_TrackEdgeB
     4300024: SpherePlanet_Visual_TrackEdge
     4300026: SpherePlanet_Visual_TrackEdgeA
+    4300028: SpherePlanet_Track_Arrows
   materials:
     importMaterials: 0
     materialName: 0
