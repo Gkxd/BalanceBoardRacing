@@ -13,11 +13,11 @@ public class CheckCorrectDirection : MonoBehaviour {
         // Casts rays to right of player and checks if "right" mesh is hit to determine correct direction
         if (Physics.Raycast(transform.position, transform.right + transform.forward, maximumRightRaycastDistance, rightMask) ||
             Physics.Raycast(transform.position, transform.right - transform.forward, maximumRightRaycastDistance, rightMask)) {
-            Debug.Log("Right");
+            //Debug.Log("Right");
             //wrongDirection.SetActive(true); //Activate WrongWay X
         }
         else {
-            Debug.Log("Not Right");
+            //Debug.Log("Not Right");
             //wrongDirection.SetActive(false); //Deactivate WrongWay X
         }
 

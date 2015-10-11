@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour {
     [Header("Reference Settings")]
     public new Rigidbody rigidbody;
     public PlayerMotionBlur motionBlur;
-    public PlayerHead head;
+    public PlayerBoostParticles boostParticles;
 
     [Header("Body Settings")]
     public float radius;
@@ -45,6 +45,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        ///*
         if (Input.GetAxis("Vertical") > 0) {
             currentSpeed += acceleration * Time.deltaTime;
         }
@@ -53,8 +54,20 @@ public class PlayerMovement : MonoBehaviour {
         }
         else {
             currentSpeed -= deceleration * Time.deltaTime;
+            //currentSpeed += acceleration * Time.deltaTime;
         }
-
+        //*/
+        /*
+        if (AccelerometerCalibration.horizontalAxis > 0.6f) {
+            currentSpeed += acceleration * Time.deltaTime;
+        }
+        else if (AccelerometerCalibration.horizontalAxis < -0.6f) {
+            currentSpeed -= breakSpeed * Time.deltaTime;
+        }
+        else {
+            currentSpeed -= deceleration * Time.deltaTime;
+        }
+        //*/
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxAccelerationSpeed);
         currentSpeed += boostSpeed;
 
@@ -63,9 +76,10 @@ public class PlayerMovement : MonoBehaviour {
             motionBlur.setBlurGradually(0.3f);
         }
 
-        //Debug.Log(Input.GetAxis("Vertical") + " " + Input.GetAxis("Horizontal"));
+        //Debug.Log("V " + Input.GetAxis("Vertical") + " H " + Input.GetAxis("Horizontal"));
 
         float turnAngle = maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
+        //float turnAngle = maxTurnAmount * AccelerometerCalibration.verticalAxis * Time.deltaTime;
         currentTurnAngle += turnAngle;
 
         RaycastHit raycastInfo;
@@ -120,6 +134,11 @@ public class PlayerMovement : MonoBehaviour {
             currentSpeed = maxAccelerationSpeed;
 
             motionBlur.setBlurSuddenly(0.7f);
+            boostParticles.addBoostTime(6);
         }
+        else {
+            boostParticles.addBoostTime(2);
+        }
+
     }
 }
