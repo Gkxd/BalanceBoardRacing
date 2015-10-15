@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Obsolete("Use the specific power up scripts instead", false)]
 public class PowerUp : MonoBehaviour {
 
     [Header("Reference Settings")]
