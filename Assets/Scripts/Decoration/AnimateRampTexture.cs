@@ -10,8 +10,10 @@ public class AnimateRampTexture : MonoBehaviour {
     public float stepSize;
     public float speed;
 
+    public int materialIndex;
+
     void Update() {
         float offset = speed * stepSize * Time.time;
-        renderer.material.SetTextureOffset("_MainTex", Vector2.right * offset);
+        renderer.materials[materialIndex].SetTextureOffset("_MainTex", Vector2.right * offset);
     }
 }
