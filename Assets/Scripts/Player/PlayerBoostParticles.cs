@@ -4,42 +4,33 @@ using System.Collections.Generic;
 
 public class PlayerBoostParticles : MonoBehaviour {
     [Header("Reference Settings")]
-    public List<ParticleSystem> enableOnBoost;
-    public List<ParticleSystem> disableOnBoost;
+    public ParticleSystem boostParticles;
+
+    [Header("Gameplay Settings")]
+    public float rampLength;
+    public AnimationCurve rampStretch;
+    public AnimationCurve emissionRamp;
+    public float minEmission;
+    public float maxEmission;
+
+    public Gradient startColor1;
 
     private float boostTime;
-
-    void Start() {
-        disableBoostParticles();
-    }
 
     void Update() {
         if (boostTime > 0) {
             boostTime -= Time.deltaTime;
-            enableBoostParticles();
         }
         else {
             boostTime = 0;
-            disableBoostParticles();
         }
-    }
 
-    private void enableBoostParticles() {
-        foreach (ParticleSystem p in enableOnBoost) {
-            p.enableEmission = true;
-        }
-        foreach (ParticleSystem p in disableOnBoost) {
-            p.enableEmission = false;
-        }
-    }
+        float t = rampStretch.Evaluate(boostTime / rampLength);
 
-    private void disableBoostParticles() {
-        foreach (ParticleSystem p in enableOnBoost) {
-            p.enableEmission = false;
-        }
-        foreach (ParticleSystem p in disableOnBoost) {
-            p.enableEmission = true;
-        }
+
+        boostParticles.startColor = Color.Lerp(startColor1.Evaluate(t), Color.white, Random.Range(0, 0.25f));
+
+        boostParticles.emissionRate = emissionRamp.Evaluate(t) * (maxEmission - minEmission) + minEmission;
     }
 
     public void addBoostTime(float time) {
