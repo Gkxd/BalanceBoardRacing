@@ -7,13 +7,10 @@ public class PlayerBoostParticles : MonoBehaviour {
     public ParticleSystem boostParticles;
 
     [Header("Gameplay Settings")]
-    public float rampLength;
-    public AnimationCurve rampStretch;
     public AnimationCurve emissionRamp;
-    public float minEmission;
-    public float maxEmission;
 
-    public Gradient startColor1;
+    public float colorRampLength;
+    public Gradient colorRamp;
 
     private float boostTime;
 
@@ -25,12 +22,10 @@ public class PlayerBoostParticles : MonoBehaviour {
             boostTime = 0;
         }
 
-        float t = rampStretch.Evaluate(boostTime / rampLength);
+        float t = boostTime / colorRampLength;
+        boostParticles.startColor = Color.Lerp(colorRamp.Evaluate(t), Color.white, Random.Range(0, 0.25f));
 
-
-        boostParticles.startColor = Color.Lerp(startColor1.Evaluate(t), Color.white, Random.Range(0, 0.25f));
-
-        boostParticles.emissionRate = emissionRamp.Evaluate(t) * (maxEmission - minEmission) + minEmission;
+        boostParticles.emissionRate = emissionRamp.Evaluate(boostTime);
     }
 
     public void addBoostTime(float time) {
