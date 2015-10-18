@@ -7,24 +7,18 @@ public class CheckCorrectDirection : MonoBehaviour {
     public float maximumRightRaycastDistance;
 
     [Header("Player UI")]
-    public GameObject wrongDirection;
+    public UI_WrongWayAlpha wrongDirection;
 
     void Update() {
         // Casts rays to right of player and checks if "right" mesh is hit to determine correct direction
-        if (Physics.Raycast(transform.position, transform.right + transform.forward, maximumRightRaycastDistance, rightMask) ||
-            Physics.Raycast(transform.position, transform.right - transform.forward, maximumRightRaycastDistance, rightMask)) {
+        if (Physics.Raycast(transform.position, transform.right + transform.forward * 0.5f, maximumRightRaycastDistance, rightMask) ||
+            Physics.Raycast(transform.position, transform.right - transform.forward * 0.5f, maximumRightRaycastDistance, rightMask)) {
             //Debug.Log("Right");
-            //wrongDirection.SetActive(true); //Activate WrongWay X
+            wrongDirection.isWrongWay = false;
         }
         else {
             //Debug.Log("Not Right");
-            //wrongDirection.SetActive(false); //Deactivate WrongWay X
+            wrongDirection.isWrongWay = true;
         }
-
-        //Debugging to check directionality
-        /*
-        Debug.DrawRay(transform.position, (transform.right + transform.forward) * maximumRightRaycastDistance, Color.red);
-        Debug.DrawRay(transform.position, (transform.right - transform.forward) * maximumRightRaycastDistance, Color.red);
-        */
     }
 }
