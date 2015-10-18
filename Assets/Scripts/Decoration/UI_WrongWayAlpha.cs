@@ -21,7 +21,7 @@ public class UI_WrongWayAlpha : MonoBehaviour {
     void Update() {
         Color targetColor = Color.clear;
         if (isWrongWay) {
-            targetColor = Color.white * (0.25f * Mathf.Sin(Time.time * frequency) + 1.1f);
+            targetColor = Color.white * (0.15f * Mathf.Sin(Time.time * frequency) + 1.05f);
         }
 
         currentColor = Color.Lerp(currentColor, targetColor, Time.deltaTime * 10);
