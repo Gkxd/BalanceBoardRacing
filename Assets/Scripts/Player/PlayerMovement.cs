@@ -72,9 +72,6 @@ public class PlayerMovement : MonoBehaviour {
         currentSpeed += boostSpeed;
 
         boostSpeed = Mathf.Lerp(boostSpeed, 0, boostDecay * Time.deltaTime);
-        if (boostSpeed < 0.01f) {
-            motionBlur.setBlurGradually(0.3f);
-        }
 
         //Debug.Log("V " + Input.GetAxis("Vertical") + " H " + Input.GetAxis("Horizontal"));
 
@@ -124,6 +121,11 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    void OnCollisionStay(Collision collision) {
+        currentSpeed = 0.1f;
+        boostSpeed = 0;
+    }
+
     public void setBoost(float f) {
         float speedIncrease = additionalBoostSpeed * f;
 
@@ -132,13 +134,10 @@ public class PlayerMovement : MonoBehaviour {
         if (currentSpeed > maxAccelerationSpeed) {
             boostSpeed = currentSpeed - maxAccelerationSpeed;
             currentSpeed = maxAccelerationSpeed;
-
-            motionBlur.setBlurSuddenly(0.7f);
-            boostParticles.addBoostTime(6);
         }
-        else {
-            boostParticles.addBoostTime(2);
-        }
+    }
 
+    public float getBoostRatio() {
+        return boostSpeed / additionalBoostSpeed;
     }
 }
