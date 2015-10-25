@@ -11,19 +11,9 @@ public class CheckCorrectDirection : MonoBehaviour {
     public UI_WrongWayAlpha wrongDirection;
 
     void Update() {
-        // Casts rays to right of player and checks if "right" mesh is hit to determine correct direction
-        if (raycastRightWall()) {
-            //Debug.Log("Right");
-            wrongDirection.isWrongWay = false;
-        }
-        else {
-            //Debug.Log("Not Right");
-            wrongDirection.isWrongWay = true;
-        }
-
-        foreach (Ray r in raycastRays()) {
-            Debug.DrawRay(r.origin, r.direction.normalized * maximumRightRaycastDistance, Color.green);
-        }
+        // Casts rays to left of player and checks if "right" mesh is hit to determine if player is facing wrong way
+        // This gives better results than casting rays to the right
+        wrongDirection.isWrongWay = raycastRightWall();
     }
 
     private bool raycastRightWall() {
@@ -36,10 +26,8 @@ public class CheckCorrectDirection : MonoBehaviour {
     }
 
     private IEnumerable<Ray> raycastRays() {
-        yield return new Ray(transform.position, transform.right);
-        yield return new Ray(transform.position, transform.right + transform.forward * 0.5f);
-        yield return new Ray(transform.position, transform.right - transform.forward * 0.5f);
-        yield return new Ray(transform.position, transform.right + transform.forward * 1.5f);
-        yield return new Ray(transform.position, transform.right - transform.forward * 1.5f);
+        yield return new Ray(transform.position, -transform.right);
+        yield return new Ray(transform.position, -transform.right + transform.forward * 0.5f);
+        yield return new Ray(transform.position, -transform.right - transform.forward * 0.5f);
     }
 }
