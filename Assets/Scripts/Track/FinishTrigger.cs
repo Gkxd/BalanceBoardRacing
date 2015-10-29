@@ -28,11 +28,13 @@ public class FinishTrigger : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate () {
 
-        if (!finished) { 
+        if (!finished) {
 
             //timer.text = raceTime.ToString("f2");
 
-            raceTime = raceTime + 1 * Time.deltaTime;
+            raceTime = Time.time;
+
+            //raceTime = raceTime + 1 * Time.deltaTime;
         }
     }
 }
