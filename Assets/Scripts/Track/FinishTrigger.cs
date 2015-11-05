@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+//using UnityEngine.UI;
 
 public class FinishTrigger : MonoBehaviour {
 
@@ -9,19 +9,27 @@ public class FinishTrigger : MonoBehaviour {
     public float raceTime;
     public int lapNumber;
     public int maxLaps;
+    public BoxCollider finishCollider;
 
     //public Text timer;
 
-    void OnTriggerEnter()
+    void Start()
+    {
+        finishCollider.enabled = false; //Initially finish line is deactivated
+    }
+
+    void OnTriggerExit()
     {
         if (lapNumber < maxLaps)
         {
             lapNumber++;
+            finishCollider.enabled = false; //Passing through finish line collider deactivates it
         }
         else
         {
-            Debug.Log("YOU WIN!");
-            finished = true;
+            /* For Debugging Purposes */
+            Debug.Log("YOU WIN!");      
+            finished = true;        
         }
     }
 

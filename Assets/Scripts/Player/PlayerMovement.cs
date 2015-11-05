@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private float currentSpeed;
     private float boostSpeed;
-    public float boost { get; set; } // The accumulated boost from pickups
+    public float boost { get; set; } //The accumulated boost from pickups
 
     void Start() {
         previousSurfaceNormal = transform.up;
@@ -79,6 +79,8 @@ public class PlayerMovement : MonoBehaviour {
         //float turnAngle = maxTurnAmount * AccelerometerCalibration.verticalAxis * Time.deltaTime;
         currentTurnAngle += turnAngle;
 
+
+        //This has to do with the track directionality
         RaycastHit raycastInfo;
         Vector3 surfaceNormal;
         if (Physics.Raycast(transform.position, -transform.up, out raycastInfo, radius, trackMask)) {
