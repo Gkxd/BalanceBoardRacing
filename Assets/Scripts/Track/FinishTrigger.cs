@@ -3,13 +3,15 @@ using System.Collections;
 //using UnityEngine.UI;
 
 public class FinishTrigger : MonoBehaviour {
-
     private bool finished = false;
 
+    [Header("Reference Settings")]
+    public BoxCollider finishCollider;
+
+    [Header("Gameplay Settings")]
     public float raceTime;
     public int lapNumber;
     public int maxLaps;
-    public BoxCollider finishCollider;
 
     //public Text timer;
 
@@ -29,7 +31,9 @@ public class FinishTrigger : MonoBehaviour {
         {
             /* For Debugging Purposes */
             Debug.Log("YOU WIN!");      
-            finished = true;        
+            finished = true;
+            ScoreManager scoreManager = (ScoreManager) GameObject.FindObjectOfType(typeof(ScoreManager));
+            scoreManager.onFinishTrack();
         }
     }
 
