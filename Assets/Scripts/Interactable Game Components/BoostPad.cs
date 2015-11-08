@@ -13,5 +13,8 @@ public class BoostPad : MonoBehaviour {
         if (controller = other.GetComponent<PlayerMovement>()) {
             controller.setBoost(strength);
         }
+
+        ScoreManager scoreManager = (ScoreManager) GameObject.FindObjectOfType(typeof(ScoreManager));
+        scoreManager.onBoostPad();
     }
 }

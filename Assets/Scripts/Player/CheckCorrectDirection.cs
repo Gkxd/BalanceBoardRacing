@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CheckCorrectDirection : MonoBehaviour {
     [Header("Collider Settings")]
@@ -7,24 +8,26 @@ public class CheckCorrectDirection : MonoBehaviour {
     public float maximumRightRaycastDistance;
 
     [Header("Player UI")]
-    public GameObject wrongDirection;
+    public UI_WrongWayAlpha wrongDirection;
 
     void Update() {
-        // Casts rays to right of player and checks if "right" mesh is hit to determine correct direction
-        if (Physics.Raycast(transform.position, transform.right + transform.forward, maximumRightRaycastDistance, rightMask) ||
-            Physics.Raycast(transform.position, transform.right - transform.forward, maximumRightRaycastDistance, rightMask)) {
-            //Debug.Log("Right");
-            //wrongDirection.SetActive(true); //Activate WrongWay X
-        }
-        else {
-            //Debug.Log("Not Right");
-            //wrongDirection.SetActive(false); //Deactivate WrongWay X
-        }
+        // Casts rays to left of player and checks if "right" mesh is hit to determine if player is facing wrong way
+        // This gives better results than casting rays to the right
+        wrongDirection.isWrongWay = raycastRightWall();
+    }
 
-        //Debugging to check directionality
-        /*
-        Debug.DrawRay(transform.position, (transform.right + transform.forward) * maximumRightRaycastDistance, Color.red);
-        Debug.DrawRay(transform.position, (transform.right - transform.forward) * maximumRightRaycastDistance, Color.red);
-        */
+    private bool raycastRightWall() {
+        foreach (Ray r in raycastRays()) {
+            if (Physics.Raycast(r, maximumRightRaycastDistance, rightMask)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private IEnumerable<Ray> raycastRays() {
+        yield return new Ray(transform.position, -transform.right);
+        yield return new Ray(transform.position, -transform.right + transform.forward * 0.5f);
+        yield return new Ray(transform.position, -transform.right - transform.forward * 0.5f);
     }
 }
