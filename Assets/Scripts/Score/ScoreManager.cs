@@ -1,33 +1,53 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class ScoreManager : MonoBehaviour {
     private bool playing;
 
     [Header("Reference Settings")]
-    public Score score;
+    public Score score; // Model
+    public ScoreDisplay scoreDisplay; // View
 
     [Header("Gameplay Settings")]
-    public int startScore;
-    public int pointsLostPerMillisecond;
     public int boostPadScore;
+    public int lapMillisecondsForBonus;
+    public int lapFinishScore;
+
+    private int lapStartTime;
 
     void Start () {
         this.onStartTrack ();
     }
 
+    private void updateDisplayedScore () {
+        this.scoreDisplay.UpdateDisplayedScore (this.score.get ());
+    }
+
+    /**
+     * Called on the start of a new track race; initializes the score.
+     */
     public void onStartTrack() {
-        this.score.setScore (this.startScore);
+        this.score.setScore (0);
+        this.updateDisplayedScore ();
+        this.onStartLap ();
         this.playing = true;
     }
 
-    void Update () {
-        Debug.Log ("Score: " + this.score.get ());
-        if (playing) {
-            int millisecondsPassed = (int)(Time.deltaTime * 1000);
-            int pointsLost = millisecondsPassed * pointsLostPerMillisecond;
-            this.score.subtractPoints (pointsLost);
-        }
+    private void onStartLap() {
+        this.lapStartTime = (int)(Time.time * 1000);
+    }
+
+    /**
+     * Called by the FinishTrigger when any lap is finished.
+     */
+    public void onFinishLap () {
+        int lapMilliseconds = ((int)(Time.time * 1000)) - this.lapStartTime;
+        int lapTimeBonus = Mathf.Max (0, this.lapMillisecondsForBonus - lapMilliseconds);
+        int lapFinishPoints = lapTimeBonus + this.lapFinishScore;
+        this.score.addPoints (lapFinishPoints);
+        this.updateDisplayedScore ();
+        this.onStartLap ();
     }
 
     /**
@@ -42,5 +62,6 @@ public class ScoreManager : MonoBehaviour {
      */
     public void onBoostPad() {
         this.score.addPoints (boostPadScore);
+        this.updateDisplayedScore ();
     }
 }
