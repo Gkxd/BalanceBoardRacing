@@ -7,6 +7,7 @@ public class FinishTrigger : MonoBehaviour {
 
     [Header("Reference Settings")]
     public BoxCollider finishCollider;
+    public ScoreManager scoreManager;
 
     [Header("Gameplay Settings")]
     public float raceTime;
@@ -22,9 +23,11 @@ public class FinishTrigger : MonoBehaviour {
 
     void OnTriggerExit()
     {
+        this.scoreManager.onFinishLap ();
         if (lapNumber < maxLaps)
         {
             lapNumber++;
+
             finishCollider.enabled = false; //Passing through finish line collider deactivates it
         }
         else
@@ -32,8 +35,7 @@ public class FinishTrigger : MonoBehaviour {
             /* For Debugging Purposes */
             Debug.Log("YOU WIN!");      
             finished = true;
-            ScoreManager scoreManager = (ScoreManager) GameObject.FindObjectOfType(typeof(ScoreManager));
-            scoreManager.onFinishTrack();
+            this.scoreManager.onFinishTrack();
         }
     }
 
