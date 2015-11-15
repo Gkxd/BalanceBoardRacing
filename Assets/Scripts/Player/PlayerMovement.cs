@@ -28,6 +28,7 @@ public class PlayerMovement : MonoBehaviour {
 
     [Header("Collider Settings")]
     public LayerMask trackMask;
+    public LayerMask wallMask;
 
     private float currentTurnAngle;
     private float currentFallSpeed;
@@ -58,10 +59,10 @@ public class PlayerMovement : MonoBehaviour {
         }
         //*/
         /*
-        if (AccelerometerCalibration.horizontalAxis > 0.6f) {
+        if (AccelerometerCalibration.verticalAxis > 0f) {
             currentSpeed += acceleration * Time.deltaTime;
         }
-        else if (AccelerometerCalibration.horizontalAxis < -0.6f) {
+        else if (AccelerometerCalibration.verticalAxis < 0f) {
             currentSpeed -= breakSpeed * Time.deltaTime;
         }
         else {
@@ -73,10 +74,10 @@ public class PlayerMovement : MonoBehaviour {
 
         boostSpeed = Mathf.Lerp(boostSpeed, 0, boostDecay * Time.deltaTime);
 
-        //Debug.Log("V " + Input.GetAxis("Vertical") + " H " + Input.GetAxis("Horizontal"));
+        //Debug.Log("V " + AccelerometerCalibration.verticalAxis + " H " + AccelerometerCalibration.horizontalAxis);
 
         float turnAngle = maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
-        //float turnAngle = maxTurnAmount * AccelerometerCalibration.verticalAxis * Time.deltaTime;
+        //float turnAngle = maxTurnAmount * AccelerometerCalibration.horizontalAxis * Time.deltaTime;
         currentTurnAngle += turnAngle;
 
 
@@ -100,6 +101,32 @@ public class PlayerMovement : MonoBehaviour {
 
         Vector3 forwardOrientation = Quaternion.FromToRotation(previousSurfaceNormal, surfaceNormal) * previousForwardOrientation;
         Vector3 forward = Quaternion.AngleAxis(currentTurnAngle, surfaceNormal) * forwardOrientation;
+
+        Debug.DrawRay(transform.position, forwardOrientation * 5, Color.red);
+        Debug.DrawRay(transform.position, forward * 5, Color.yellow);
+
+        if (Physics.Raycast(transform.position, forward, out raycastInfo, 5, wallMask)) {
+            //Vector3 newForward = (raycastInfo.point + raycastInfo.normal - transform.position);
+            Vector3 newForward = 5*forward + raycastInfo.normal;
+
+            newForward = Vector3.ProjectOnPlane(newForward, surfaceNormal).normalized;
+
+            Vector3 crossA = Vector3.Cross(forwardOrientation, forward);
+            Vector3 crossB = Vector3.Cross(forwardOrientation, newForward);
+
+
+            float newTurnAngle;
+            if (Vector3.Dot(crossA, crossB) > 0) {
+                newTurnAngle = Vector3.Angle(forwardOrientation, newForward);
+            }
+            else {
+                newTurnAngle = -Vector3.Angle(forwardOrientation, newForward);
+            }
+
+            currentTurnAngle = newTurnAngle;
+            forward = Quaternion.AngleAxis(currentTurnAngle, surfaceNormal) * forwardOrientation;
+        }
+
         rigidbody.rotation = Quaternion.LookRotation(forward, surfaceNormal);
 
         previousSurfaceNormal = surfaceNormal;
@@ -124,8 +151,8 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void OnCollisionStay(Collision collision) {
-        currentSpeed = 0.1f;
-        boostSpeed = 0;
+        //currentSpeed = 0.1f;
+        //boostSpeed = 0;
     }
 
     public void setBoost(float f) {

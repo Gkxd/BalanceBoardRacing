@@ -2,24 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AccelerometerCalibration : MonoBehaviour
-{
+public class AccelerometerCalibration : MonoBehaviour {
 
-    //private static List<Vector3> forwardSamples, backwardSamples, leftSamples, rightSamples, restingSamples;
-    private static VectorStats forward, backward, left, right, rest;
+    public bool calibrationEnabled;
+
+    private static VectorStats forward, backward, left, right, restV, restH;
 
     //calculates the natural logarithm of the probability of x given stdDev and mean for a normal distribution
-    private static float probNormalDist(float x, float stdDev, float mean)
-    {
+    private static float probNormalDist(float x, float stdDev, float mean) {
         float coefficient = 1 / (stdDev * Mathf.Sqrt((2 * Mathf.PI)));
         float exponent = (Mathf.Pow((x - mean), 2)) / (-2 * Mathf.Pow(stdDev, 2));
         return (Mathf.Log(coefficient) + exponent);
     }
 
-    public static float horizontalAxis
-    {
-        get
-        {
+    public static float horizontalAxis {
+        get {
             Vector3 acceleration = OSCManager.accelerationVector;
             //Debug.Log(acceleration);
             float x = acceleration.x;
@@ -30,8 +27,8 @@ public class AccelerometerCalibration : MonoBehaviour
             Vector3 lmean = left.average;
             Vector3 rstdDev = right.stdDev;
             Vector3 rmean = right.average;
-            Vector3 reststdDev = rest.stdDev;
-            Vector3 restmean = rest.average;
+            Vector3 reststdDev = restH.stdDev;
+            Vector3 restmean = restH.average;
 
             float probLeft = probNormalDist(x, lstdDev.x, lmean.x) +
                 probNormalDist(y, lstdDev.y, lmean.y) +
@@ -46,27 +43,22 @@ public class AccelerometerCalibration : MonoBehaviour
                 probNormalDist(y, reststdDev.y, restmean.y) +
                 probNormalDist(z, reststdDev.z, restmean.z);
 
-            Debug.Log("probLeft: " + Mathf.Log10(-probLeft) + " probRight: " + Mathf.Log10(-probRight));
+            //Debug.Log("probLeft: " + Mathf.Log10(-probLeft) + " probRight: " + Mathf.Log10(-probRight));
 
-            if (probLeft >= probRest && probLeft >= probRight)
-            {
+            if (probLeft >= probRest && probLeft >= probRight) {
                 return -1;
             }
-            else if (probRight > probLeft && probRight >= probRest)
-            {
+            else if (probRight > probLeft && probRight >= probRest) {
                 return 1;
             }
-            else
-            {
+            else {
                 return 0;
             }
         }
     }
 
-    public static float verticalAxis
-    {
-        get
-        {
+    public static float verticalAxis {
+        get {
             Vector3 acceleration = OSCManager.accelerationVector;
             //Debug.Log(acceleration);
             float x = acceleration.x;
@@ -77,8 +69,8 @@ public class AccelerometerCalibration : MonoBehaviour
             Vector3 fmean = forward.average;
             Vector3 bstdDev = backward.stdDev;
             Vector3 bmean = backward.average;
-            Vector3 reststdDev = rest.stdDev;
-            Vector3 restmean = rest.average;
+            Vector3 reststdDev = restV.stdDev;
+            Vector3 restmean = restV.average;
 
             float probForward = probNormalDist(x, fstdDev.x, fmean.x) +
                 probNormalDist(y, fstdDev.y, fmean.y) +
@@ -92,129 +84,125 @@ public class AccelerometerCalibration : MonoBehaviour
                 probNormalDist(y, reststdDev.y, restmean.y) +
                 probNormalDist(z, reststdDev.z, restmean.z);
 
-            Debug.Log("probForward: " + Mathf.Log10(-probForward) + " probBackward: " + Mathf.Log10(-probBackward));
+            //Debug.Log("probForward: " + Mathf.Log10(-probForward) + " probBackward: " + Mathf.Log10(-probBackward));
 
-            if (probBackward >= probRest && probBackward >= probForward)
-            {
+            if (probBackward >= probRest && probBackward >= probForward) {
                 return -1;
             }
-            else if (probForward > probBackward && probForward >= probRest)
-            {
+            else if (probForward > probBackward && probForward >= probRest) {
                 return 1;
             }
-            else
-            {
+            else {
                 return 0;
             }
         }
     }
 
-    void Awake()
-    {
+    void Awake() {
         resetSamples();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            left.add(OSCManager.accelerationVector);
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            right.add(OSCManager.accelerationVector);
-        }
-        else if (Input.GetKeyDown(KeyCode.W))
-        {
-            forward.add(OSCManager.accelerationVector);
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            backward.add(OSCManager.accelerationVector);
-        }
-        else if (Input.GetKeyDown(KeyCode.Q))
-        {
-            rest.add(OSCManager.accelerationVector);
-        }
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            string hor = "NONE";
-            string ver = "NONE";
-
-            if (horizontalAxis == 1) 
-            {
-                hor = "RIGHT";
-            }
-            else if (horizontalAxis == -1)
-            {
-                hor = "LEFT";
-            }
-            if (verticalAxis == 1)
-            {
-                ver = "FORWARD";
-            }
-            else if (verticalAxis == -1)
-            {
-                ver = "BACKWARD";
-            }
-            Debug.Log(hor + " " + ver);
-        }
-        else if (Input.GetKeyDown(KeyCode.R))
-        {
-            resetSamples();
-        }
-        else if (Input.GetKeyDown(KeyCode.K))
-        {
-            forward.save("forward");
-            backward.save("backward");
-            left.save("left");
-            right.save("right");
-            rest.save("rest");
-        }
-        else if (Input.GetKeyDown(KeyCode.L))
-        {
+        if (!calibrationEnabled) {
             forward.load("forward");
             backward.load("backward");
             left.load("left");
             right.load("right");
-            rest.load("rest");
+            restV.load("restV");
+            restH.load("restH");
+        }
+    }
+
+    void Update() {
+        if (!calibrationEnabled) {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.A)) {
+            left.add(OSCManager.accelerationVector);
+        }
+        else if (Input.GetKeyDown(KeyCode.D)) {
+            right.add(OSCManager.accelerationVector);
+        }
+        else if (Input.GetKeyDown(KeyCode.W)) {
+            forward.add(OSCManager.accelerationVector);
+        }
+        else if (Input.GetKeyDown(KeyCode.S)) {
+            backward.add(OSCManager.accelerationVector);
+        }
+        else if (Input.GetKeyDown(KeyCode.Q)) {
+            restV.add(OSCManager.accelerationVector);
+        }
+        else if (Input.GetKeyDown(KeyCode.E)) {
+            restH.add(OSCManager.accelerationVector);
+        }
+        else if (Input.GetKeyDown(KeyCode.T)) {
+            string hor = "NONE";
+            string ver = "NONE";
+
+            if (horizontalAxis == 1) {
+                hor = "RIGHT";
+            }
+            else if (horizontalAxis == -1) {
+                hor = "LEFT";
+            }
+            if (verticalAxis == 1) {
+                ver = "FORWARD";
+            }
+            else if (verticalAxis == -1) {
+                ver = "BACKWARD";
+            }
+            Debug.Log(hor + " " + ver);
+        }
+        else if (Input.GetKeyDown(KeyCode.R)) {
+            resetSamples();
+        }
+        else if (Input.GetKeyDown(KeyCode.K)) {
+            forward.save("forward");
+            backward.save("backward");
+            left.save("left");
+            right.save("right");
+            restV.save("restV");
+            restH.save("restH");
+        }
+        else if (Input.GetKeyDown(KeyCode.L)) {
+            forward.load("forward");
+            backward.load("backward");
+            left.load("left");
+            right.load("right");
+            restV.load("restV");
+            restH.load("restH");
         }
 
         Debug.DrawRay(Vector3.zero, left.average, Color.red);
         Debug.DrawRay(Vector3.zero, right.average, Color.blue);
         Debug.DrawRay(Vector3.zero, forward.average, Color.green);
         Debug.DrawRay(Vector3.zero, backward.average, Color.yellow);
-        Debug.DrawRay(Vector3.zero, rest.average, Color.white);
+        Debug.DrawRay(Vector3.zero, restV.average, Color.white);
+        Debug.DrawRay(Vector3.zero, restH.average, Color.black);
     }
 
-    private void resetSamples()
-    {
+    private void resetSamples() {
         forward.reset();
         backward.reset();
         left.reset();
         right.reset();
-        rest.reset();
+        restV.reset();
     }
 
 
 
-    private struct VectorStats
-    {
+    private struct VectorStats {
         public Vector3 average { get; private set; }
         private Vector3 variance { get; set; }
         public Vector3 stdDev { get; private set; }
         public int count { get; private set; }
 
-        public void reset()
-        {
+        public void reset() {
             average = Vector3.zero;
             variance = Vector3.zero;
             stdDev = Vector3.zero;
             count = 0;
         }
 
-        public void save(string name)
-        {
+        public void save(string name) {
             PlayerPrefs.SetFloat(name + "avgx", average.x);
             PlayerPrefs.SetFloat(name + "avgy", average.y);
             PlayerPrefs.SetFloat(name + "avgz", average.z);
@@ -226,8 +214,7 @@ public class AccelerometerCalibration : MonoBehaviour
             PlayerPrefs.Save();
         }
 
-        public void load(string name)
-        {
+        public void load(string name) {
             Vector3 avg = new Vector3(PlayerPrefs.GetFloat(name + "avgx"),
                 PlayerPrefs.GetFloat(name + "avgy"),
                 PlayerPrefs.GetFloat(name + "avgz"));
@@ -241,8 +228,7 @@ public class AccelerometerCalibration : MonoBehaviour
             stdDev = sd;
         }
 
-        public void add(Vector3 vector)
-        {
+        public void add(Vector3 vector) {
             Vector3 newTotal = average * count++ + vector;
             Vector3 newAverage = newTotal / count;
 
