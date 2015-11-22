@@ -54,8 +54,8 @@ public class PlayerMovement : MonoBehaviour {
             currentSpeed -= breakSpeed * Time.deltaTime;
         }
         else {
-            currentSpeed -= deceleration * Time.deltaTime;
-            //currentSpeed += acceleration * Time.deltaTime;
+            //currentSpeed -= deceleration * Time.deltaTime;
+            currentSpeed += acceleration / 5 * Time.deltaTime;
         }
         //*/
         /*
@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour {
 
         Debug.DrawRay(transform.position, forwardOrientation * 5, Color.red);
         Debug.DrawRay(transform.position, forward * 5, Color.yellow);
-
+        /*
         if (Physics.Raycast(transform.position, forward, out raycastInfo, 5, wallMask)) {
             //Vector3 newForward = (raycastInfo.point + raycastInfo.normal - transform.position);
             Vector3 newForward = 5*forward + raycastInfo.normal;
@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour {
 
             currentTurnAngle = newTurnAngle;
             forward = Quaternion.AngleAxis(currentTurnAngle, surfaceNormal) * forwardOrientation;
-        }
+        } */
 
         rigidbody.rotation = Quaternion.LookRotation(forward, surfaceNormal);
 
