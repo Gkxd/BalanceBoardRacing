@@ -27,7 +27,7 @@ public class CheckCorrectDirection : MonoBehaviour {
 
     private IEnumerable<Ray> raycastRays() {
         yield return new Ray(transform.position, -transform.right);
-        yield return new Ray(transform.position, -transform.right + transform.forward * 0.5f);
-        yield return new Ray(transform.position, -transform.right - transform.forward * 0.5f);
+        yield return new Ray(transform.position, -transform.right + transform.forward * 0.2f);
+        yield return new Ray(transform.position, -transform.right - transform.forward * 0.2f);
     }
 }
