@@ -4,7 +4,6 @@ using System.Collections;
 public class BoostPad : MonoBehaviour {
     [Header("Reference Settings")]
     public new Collider collider;
-    public AudioClip soundEffect;
     [Header("Gameplay Settings")]
     [Range(0f, 1f)]
     public float strength;
