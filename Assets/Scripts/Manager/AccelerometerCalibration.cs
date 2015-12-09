@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class AccelerometerCalibration : MonoBehaviour {
 
@@ -111,6 +112,9 @@ public class AccelerometerCalibration : MonoBehaviour {
     }
 
     void Update() {
+        if (Input.GetKeyDown(KeyCode.O)) {
+            importFromFile();
+        }
         if (!calibrationEnabled) {
             return;
         }
@@ -170,6 +174,9 @@ public class AccelerometerCalibration : MonoBehaviour {
             restV.load("restV");
             restH.load("restH");
         }
+        else if (Input.GetKeyDown(KeyCode.P)) {
+            exportToFile();
+        }
 
         Debug.DrawRay(Vector3.zero, left.average, Color.red);
         Debug.DrawRay(Vector3.zero, right.average, Color.blue);
@@ -185,9 +192,52 @@ public class AccelerometerCalibration : MonoBehaviour {
         left.reset();
         right.reset();
         restV.reset();
+        restH.reset();
     }
 
+    private void exportToFile() {
+        List<string> lines = new List<string>();
+        lines.Add("forward " + forward);
+        lines.Add("backward " + backward);
+        lines.Add("left " + left);
+        lines.Add("right " + right);
+        lines.Add("restV " + restV);
+        lines.Add("restH " + restH);
 
+        string path = Application.dataPath + "/balanceboard.calibration";
+
+        File.WriteAllLines(path, lines.ToArray());
+
+        Debug.Log("Finished Exporting to " + path);
+    }
+
+    private void importFromFile() {
+        string[] lines = File.ReadAllLines(Application.dataPath + "/balanceboard.calibration");
+
+        for (int i = 0; i < lines.Length; i++) {
+            string[] tokens = lines[i].Split(' ');
+            switch (tokens[0]) {
+                case "forward":
+                    forward.loadFromFile(tokens);
+                    break;
+                case "backward":
+                    backward.loadFromFile(tokens);
+                    break;
+                case "left":
+                    left.loadFromFile(tokens);
+                    break;
+                case "right":
+                    right.loadFromFile(tokens);
+                    break;
+                case "restV":
+                    restV.loadFromFile(tokens);
+                    break;
+                case "restH":
+                    restH.loadFromFile(tokens);
+                    break;
+            }
+        }
+    }
 
     private struct VectorStats {
         public Vector3 average { get; private set; }
@@ -240,6 +290,15 @@ public class AccelerometerCalibration : MonoBehaviour {
             stdDev = new Vector3(Mathf.Sqrt(variance.x), Mathf.Sqrt(variance.y), Mathf.Sqrt(variance.z));
 
             average = newAverage;
+        }
+
+        public override string ToString() {
+            return average.x + " " + average.y + " " + average.z + " " + stdDev.x + " " + stdDev.y + " " + stdDev.z;
+        }
+
+        public void loadFromFile(string[] tokens) {
+            average = new Vector3(float.Parse(tokens[1]), float.Parse(tokens[2]), float.Parse(tokens[3]));
+            stdDev = new Vector3(float.Parse(tokens[4]), float.Parse(tokens[5]), float.Parse(tokens[6]));
         }
     }
 }

@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        ///*
+        /*
         if (Input.GetAxis("Vertical") > 0) {
             currentSpeed += acceleration * Time.deltaTime;
         }
@@ -58,7 +58,7 @@ public class PlayerMovement : MonoBehaviour {
             currentSpeed += acceleration / 5 * Time.deltaTime;
         }
         //*/
-        /*
+        ///*
         if (AccelerometerCalibration.verticalAxis > 0f) {
             currentSpeed += acceleration * Time.deltaTime;
         }
@@ -76,8 +76,8 @@ public class PlayerMovement : MonoBehaviour {
 
         //Debug.Log("V " + AccelerometerCalibration.verticalAxis + " H " + AccelerometerCalibration.horizontalAxis);
 
-        float turnAngle = maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
-        //float turnAngle = maxTurnAmount * AccelerometerCalibration.horizontalAxis * Time.deltaTime;
+        //float turnAngle = maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
+        float turnAngle = maxTurnAmount * AccelerometerCalibration.horizontalAxis * Time.deltaTime;
         currentTurnAngle += turnAngle;
 
 

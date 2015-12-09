@@ -13,7 +13,7 @@ public class BoostPad : MonoBehaviour {
         PlayerMovement controller;
         if (controller = other.GetComponent<PlayerMovement>()) {
             controller.setBoost(strength);
-            AudioSource.PlayClipAtPoint(soundEffect, transform.position, 1);
+            //AudioSource.PlayClipAtPoint(soundEffect, transform.position, 1);
         }
 
         ScoreManager scoreManager = (ScoreManager) GameObject.FindObjectOfType(typeof(ScoreManager));

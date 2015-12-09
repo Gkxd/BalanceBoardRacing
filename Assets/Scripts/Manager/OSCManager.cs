@@ -27,6 +27,14 @@ public class OSCManager : MonoBehaviour {
             output += s;
 
             int index;
+
+            if ((index = s.IndexOf("/accelerometer")) != -1) {
+                string[] tokens = s.Substring(index).Split(' ');
+                accelerometerX = float.Parse(tokens[1]);
+                accelerometerY = float.Parse(tokens[2]);
+                accelerometerZ = float.Parse(tokens[3]);
+            }
+            /*
             if ((index = s.IndexOf("/accelerometer/raw/x")) != -1) {
                 accelerometerX = float.Parse(s.Substring(index + 20).Trim());
             }
@@ -36,6 +44,7 @@ public class OSCManager : MonoBehaviour {
             else if ((index = s.IndexOf("/accelerometer/raw/z")) != -1) {
                 accelerometerZ = float.Parse(s.Substring(index + 20).Trim());
             }
+             */
         }
 
         Debug.DrawRay(Vector3.zero, new Vector3(accelerometerX, accelerometerY, accelerometerZ), Color.cyan);
