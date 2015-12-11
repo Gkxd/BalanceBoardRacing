@@ -40,46 +40,49 @@ public class PlayerMovement : MonoBehaviour {
     private float boostSpeed;
     public float boost { get; set; } //The accumulated boost from pickups
 
+    public bool useCellphoneControls;
+
     void Start() {
         previousSurfaceNormal = transform.up;
         previousForwardOrientation = transform.forward;
     }
 
     void FixedUpdate() {
-        /*
-        if (Input.GetAxis("Vertical") > 0) {
-            currentSpeed += acceleration * Time.deltaTime;
-        }
-        else if (Input.GetAxis("Vertical") < 0) {
-            currentSpeed -= breakSpeed * Time.deltaTime;
-        }
-        else {
-            //currentSpeed -= deceleration * Time.deltaTime;
-            currentSpeed += acceleration / 5 * Time.deltaTime;
-        }
-        //*/
-        ///*
-        if (AccelerometerCalibration.verticalAxis > 0f) {
-            currentSpeed += acceleration * Time.deltaTime;
-        }
-        else if (AccelerometerCalibration.verticalAxis < 0f) {
-            currentSpeed -= breakSpeed * Time.deltaTime;
+        float turnAngle;
+
+        if (useCellphoneControls) {
+            if (AccelerometerCalibration.verticalAxis > 0f) {
+                currentSpeed += acceleration * Time.deltaTime;
+            }
+            else if (AccelerometerCalibration.verticalAxis < 0f) {
+                currentSpeed -= breakSpeed * Time.deltaTime;
+            }
+            else {
+                currentSpeed -= deceleration * Time.deltaTime;
+            }
+
+            turnAngle = maxTurnAmount * AccelerometerCalibration.horizontalAxis * Time.deltaTime;
         }
         else {
-            currentSpeed -= deceleration * Time.deltaTime;
+            if (Input.GetAxis("Vertical") > 0) {
+                currentSpeed += acceleration * Time.deltaTime;
+            }
+            else if (Input.GetAxis("Vertical") < 0) {
+                currentSpeed -= breakSpeed * Time.deltaTime;
+            }
+            else {
+                currentSpeed -= deceleration * Time.deltaTime;
+            }
+
+            turnAngle = maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
         }
-        //*/
+
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxAccelerationSpeed);
         currentSpeed += boostSpeed;
 
         boostSpeed = Mathf.Lerp(boostSpeed, 0, boostDecay * Time.deltaTime);
 
-        //Debug.Log("V " + AccelerometerCalibration.verticalAxis + " H " + AccelerometerCalibration.horizontalAxis);
-
-        //float turnAngle = maxTurnAmount * Input.GetAxis("Horizontal") * Time.deltaTime;
-        float turnAngle = maxTurnAmount * AccelerometerCalibration.horizontalAxis * Time.deltaTime;
         currentTurnAngle += turnAngle;
-
 
         //This has to do with the track directionality
         RaycastHit raycastInfo;
